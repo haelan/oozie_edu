@@ -1,0 +1,40 @@
+<coordinator-app name="cd_test" frequency="${coord:days(1)}" start="${start}" end="${end}" timezone="${timezone}" xmlns="uri:oozie:coordinator:0.2">
+	<controls>
+		<timeout>480</timeout>		
+		<concurrency>${concurrency}</concurrency>
+	</controls>
+
+	<datasets>
+		<dataset name="test-flag" initial-instance="${start}" frequency="${coord:days(1)}" timezone="${timezone}">
+			<uri-template>${nameNode}/oozie_edu/${examplesRoot}/input-data/${doneFlag}</uri-template>
+			<done-flag></done-flag>
+		</dataset>
+	</datasets>
+
+	<input-events>
+		<data-in name="test-event" dataset="test-flag">
+			<instance>${coord:current(-1)}</instance>
+		</data-in>
+	</input-events>
+
+	<action>
+		<workflow>
+			<app-path>${workflowAppUri}</app-path>
+			<configuration>
+				<property>
+					<name>logYYYY</name>
+					<value>${coord:formatTime(coord:dateOffset(coord:nominalTime(), -1, 'DAY'), 'yyyy')}</value>
+				</property>
+				<property>
+					<name>logMM</name>
+					<value>${coord:formatTime(coord:dateOffset(coord:nominalTime(), -1, 'DAY'), 'MM')}</value>
+				</property>
+				<property>
+					<name>logDD</name>
+					<value>${coord:formatTime(coord:dateOffset(coord:nominalTime(), -1, 'DAY'), 'dd')}</value>
+				</property>
+			</configuration>
+		</workflow>
+	</action>
+
+</coordinator-app>

@@ -1,0 +1,11 @@
+use hive_edu;
+
+ADD JAR ${HIVE_UDF_JAR};
+
+CREATE TEMPORARY FUNCTION udf_lastDay as 'com.nexr.platform.hive.udf.UDFLastDay';
+
+--CREATE EXTERNAL TABLE IF NOT EXISTS hive_udf_test (logYYYYMMDD STRING) STORED AS TEXTFILE LOCATION '${OUTPUT}';
+CREATE EXTERNAL TABLE IF NOT EXISTS hive_udf_test (logYYYYMMDD STRING) ;
+
+INSERT INTO TABLE hive_udf_test
+SELECT udf_lastDay('2016-07-08 13:20:35') from dual;

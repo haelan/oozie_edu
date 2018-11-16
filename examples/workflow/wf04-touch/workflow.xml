@@ -1,0 +1,15 @@
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="wf04-touch">
+    <start to="fs-touch-flag"/>
+    <action name="fs-touch-flag">
+        <fs>
+        	<touchz path="${nameNode}/oozie_edu/${examplesRoot}/output-data/${logYYYY}${logMM}${logDD}.chk"/>
+        </fs>
+    <ok to="end"/>
+    <error to="fail"/>
+    </action>
+    
+    <kill name="fail">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end"/>    
+</workflow-app>

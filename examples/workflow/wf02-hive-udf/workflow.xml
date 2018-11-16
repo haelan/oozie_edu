@@ -1,0 +1,26 @@
+<workflow-app xmlns="uri:oozie:workflow:0.2" name="wf02-hive-udf">
+    <start to="hive-node"/>
+
+    <action name="hive-node">
+        <hive xmlns="uri:oozie:hive-action:0.2">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+            </configuration>
+            <script>hive_udf_test.hql</script>
+            <param>HIVE_UDF_JAR=${hiveUdfJar}</param>
+            <param>OUTPUT=/oozie_edu/${examplesRoot}/output-data/udfDataOut</param>
+        </hive>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+
+    <kill name="fail">
+        <message>Hive failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>
